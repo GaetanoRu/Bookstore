@@ -1,7 +1,9 @@
+using Bookstore.ApplicationCore.Validations;
 using Bookstore.BusinessLayer.Mappers;
 using Bookstore.BusinessLayer.Services;
 using Bookstore.BusinessLayer.Services.Interfaces;
 using Bookstore.DataAccessLayer;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore
@@ -14,9 +16,16 @@ namespace Bookstore
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
+            });
 
             builder.Services.AddAutoMapper(typeof(AuthorMapperProfile).Assembly);
+            builder.Services.AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblyContaining<RatingRequestValidator>();
+            });
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<DataContext>(options =>
