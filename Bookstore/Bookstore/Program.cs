@@ -1,3 +1,6 @@
+using Bookstore.BusinessLayer.Mappers;
+using Bookstore.BusinessLayer.Services;
+using Bookstore.BusinessLayer.Services.Interfaces;
 using Bookstore.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +16,19 @@ namespace Bookstore
 
             builder.Services.AddControllers();
 
+            builder.Services.AddAutoMapper(typeof(AuthorMapperProfile).Assembly);
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(connectionString);
             });
+
+
+            //services
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IRatingService, RatingService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
