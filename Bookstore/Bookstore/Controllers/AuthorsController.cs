@@ -17,7 +17,10 @@ namespace Bookstore.Controllers
             this.authorService = authorService;
         }
 
-     
+        /// <summary>
+        /// Get the authors
+        /// </summary>
+        /// <response code="200">The authors found</response>
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -29,7 +32,12 @@ namespace Bookstore.Controllers
 
         }
 
-      
+        /// <summary>
+        /// Get a specific author
+        /// </summary>
+        /// <param name="id">Id of the author to retrive</param>
+        /// <response code="200">The desired author and the books published</response>
+        /// <response code="404">The author not found</response>
         [HttpGet("{id:guid}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(typeof(AuthorBook), StatusCodes.Status200OK)]
