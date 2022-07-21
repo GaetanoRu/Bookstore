@@ -5,6 +5,9 @@ using Bookstore.BusinessLayer.Services.Interfaces;
 using Bookstore.DataAccessLayer;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Bookstore
 {
@@ -18,7 +21,7 @@ namespace Bookstore
 
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
             });
 
             builder.Services.AddAutoMapper(typeof(AuthorMapperProfile).Assembly);
@@ -41,7 +44,29 @@ namespace Bookstore
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Bookstore",
+                    Version = "v1",
+                    Description = "Bookstore Api",
+
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Gaetano Russo",
+                        Email = "gaetano-russo90@hotmail.it",
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+
+
+            });
+
 
             var app = builder.Build();
 
