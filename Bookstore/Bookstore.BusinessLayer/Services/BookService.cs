@@ -34,6 +34,7 @@ namespace Bookstore.BusinessLayer.Services
             var current = (pageIndex <= 0) ? 1 : pageIndex;
 
             var book = await db
+                .AsSplitQuery()
                 .Include(r => r.Ratings)
                 .OrderBy(t => t.Title)
                 .Skip(pageIndex * itemsPerPage).Take(itemsPerPage + 1)
