@@ -20,6 +20,13 @@ namespace Bookstore.Controllers
             this.ratingService = ratingService;
         }
 
+        /// <summary>
+        /// Get the paginated books list
+        /// </summary>
+        /// <param name="search"></param>
+        /// <param name="pageIndex">The index of the page to get</param>
+        /// <param name="itemPerpage">The number of elements to get</param>
+        /// <response code="200">The books list</response>
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -31,6 +38,12 @@ namespace Bookstore.Controllers
             return listBooks;
         }
 
+        /// <summary>
+        /// Get a specific book
+        /// </summary>
+        /// <param name="id">Id of the book to retrive</param>
+        /// <response code="200">The desired book</response>
+        /// <response code="404">The book not found</response>
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
@@ -46,7 +59,13 @@ namespace Bookstore.Controllers
             return NotFound();
         }
 
-
+        /// <summary>
+        ///  Get the paginated ratings of the given book
+        /// </summary>
+        /// <param name="bookId">Id of the book</param>
+        /// <param name="pageIndex">The index of the page to get</param>
+        /// <param name="itemsPerPage">The number of the elements to get</param>
+        /// <returns></returns>
         [HttpGet("{id:guid}/rating")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(typeof(ListResultPagination<Rating>), StatusCodes.Status200OK)]
@@ -59,7 +78,13 @@ namespace Bookstore.Controllers
         }
 
 
-
+        /// <summary>
+        /// Send a new rating for a book
+        /// </summary>
+        /// <param name="bookId">Id of the book to rate</param>
+        /// <param name="rating">The rating to submit</param>
+        /// <response code="200">Rating submitted successfully</response>
+        /// <response code="400">Unable to submit the rating because of an error of input data</response>
         [HttpPost("{id:guid}/rating")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(typeof(NewRating), StatusCodes.Status200OK)]
@@ -68,8 +93,6 @@ namespace Bookstore.Controllers
         {
             var newRating = await ratingService.RateAsync(bookId, rating);
             return newRating;
-            //return CreatedAtRoute($"/api/v1/rating/{bookId}", newRating); //TODO: Controllare 
-            //return CreatedAtRoute($"/api/v1/books/{bookId}/rating",newRating);
 
         }
     }
